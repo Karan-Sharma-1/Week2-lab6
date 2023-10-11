@@ -28,6 +28,37 @@ app.post("/api/books", (req, res) => {
   res.status(201).json(newBook);
 });
 
+app.put("/api/books/:id", (req, res) => {
+  const bookId = parseInt(req.params.id);
+  const updatedBook = req.body;
+
+  // Find the index of the book with the given ID
+  const bookIndex = books.findIndex((book) => book.id === bookId);
+
+  if (bookIndex !== -1) {
+    // Update the book with the new data
+    books[bookIndex] = { id: bookId, ...updatedBook };
+    res.json(books[bookIndex]);
+  } else {
+    res.status(404).json({ message: "Book not found" });
+  }
+});
+
+app.delete("/api/books/:id", (req, res) => {
+  const bookId = parseInt(req.params.id);
+
+  // Find the index of the book with the given ID
+  const bookIndex = books.findIndex((book) => book.id === bookId);
+
+  if (bookIndex !== -1) {
+    // Remove the book from the array
+    books.splice(bookIndex, 1);
+    res.json({ message: "Book deleted" });
+  } else {
+    res.status(404).json({ message: "Book not found" });
+  }
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
